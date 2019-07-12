@@ -168,12 +168,15 @@ module Dpl
         Dir.chdir(tmp_dir) do
           require 'bundler/inline'
           info "Installing gem dependencies: #{gems.map { |name, version, _| "#{name} #{"(#{version})" if version}".strip }.join(', ')}"
+          env = ENV.to_h
+          # Bundler.reset!
+          # Gem.loaded_specs.clear
           gemfile do
             source 'https://rubygems.org'
             gems.each { |g| gem *g }
           end
           # https://github.com/bundler/bundler/issues/7181
-          ENV.replace(Bundler.original_env)
+          ENV.replace(env)
         end
       end
 
